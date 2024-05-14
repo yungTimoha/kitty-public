@@ -7,9 +7,9 @@ from cats.views import AchievementViewSet, CatViewSet, UserViewSet
 
 
 router = routers.DefaultRouter()
-router.register(r'cats', CatViewSet)
-router.register(r'users', UserViewSet)
-router.register(r'achievements', AchievementViewSet)
+router.register('cats', CatViewSet)
+router.register('users', UserViewSet)
+router.register('achievements', AchievementViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
