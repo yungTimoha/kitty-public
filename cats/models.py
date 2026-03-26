@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.db.models import UniqueConstraint
 
 CHOICES = (
     ('Gray', 'Серый'),
@@ -37,3 +38,47 @@ class AchievementCat(models.Model):
 
     def __str__(self):
         return f'{self.achievement} {self.cat}'
+
+
+class Like(models.Model):
+    user = models.ForeignKey(
+        User, related_name='likes', on_delete=models.CASCADE
+    )
+    cat = models.ForeignKey(
+        Cat, related_name='likes', on_delete=models.CASCADE
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('-created_at',)
+        constraints = [
+            UniqueConstraint(
+                fields=('user', 'cat'),
+                name='unique_like_per_user_cat',
+            ),
+        ]
+
+    def __str__(self):
+        return f'{self.user} likes {self.cat}'
+
+
+class Favorite(models.Model):
+    user = models.ForeignKey(
+        User, related_name='favorites', on_delete=models.CASCADE
+    )
+    cat = models.ForeignKey(
+        Cat, related_name='favorites', on_delete=models.CASCADE
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('-created_at',)
+        constraints = [
+            UniqueConstraint(
+                fields=('user', 'cat'),
+                name='unique_favorite_per_user_cat',
+            ),
+        ]
+
+    def __str__(self):
+        return f'{self.user} favorited {self.cat}'
