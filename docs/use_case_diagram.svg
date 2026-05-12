@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="760" viewBox="0 0 1180 760" role="img" aria-labelledby="title desc">
+  <title id="title">Диаграмма вариантов использования Kittygram</title>
+  <desc id="desc">Пользователь и API-клиент взаимодействуют с функциями сценария Кото-путешествия.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#30475e"/>
+    </marker>
+    <style>
+      .page { fill: #ffffff; }
+      .system { fill: #f8fbff; stroke: #30475e; stroke-width: 2.4; rx: 18; }
+      .actor { fill: #fff8ed; stroke: #9a6b22; stroke-width: 2; }
+      .usecase { fill: #eef8f0; stroke: #3b7d4a; stroke-width: 2; }
+      .check { fill: #fbf0f4; stroke: #8f3f65; stroke-width: 2; }
+      .title { font: 700 28px Arial, sans-serif; fill: #1c2730; }
+      .label { font: 700 17px Arial, sans-serif; fill: #1c2730; }
+      .text { font: 14px Arial, sans-serif; fill: #24333d; }
+      .small { font: 12px Arial, sans-serif; fill: #44515b; }
+      .line { stroke: #30475e; stroke-width: 2; fill: none; marker-end: url(#arrow); }
+      .dash { stroke-dasharray: 7 6; }
+    </style>
+  </defs>
+
+  <rect class="page" x="0" y="0" width="1180" height="760"/>
+  <text class="title" x="40" y="52">Диаграмма вариантов использования: “Кото-путешествия”</text>
+
+  <circle class="actor" cx="110" cy="150" r="28"/>
+  <path class="actor" d="M110 178 L110 255 M70 205 L150 205 M110 255 L75 315 M110 255 L145 315" fill="none"/>
+  <text class="label" x="57" y="350">Пользователь</text>
+
+  <circle class="actor" cx="105" cy="505" r="28"/>
+  <path class="actor" d="M105 533 L105 610 M65 560 L145 560 M105 610 L70 670 M105 610 L140 670" fill="none"/>
+  <text class="label" x="40" y="705">Проверяющий</text>
+  <text class="small" x="55" y="724">API-клиент</text>
+
+  <rect class="system" x="250" y="95" width="860" height="590"/>
+  <text class="label" x="530" y="130">Kittygram API: сценарий “Кото-путешествия”</text>
+
+  <ellipse class="usecase" cx="440" cy="190" rx="135" ry="38"/>
+  <text class="text" x="350" y="195">Получить JWT-токен</text>
+
+  <ellipse class="usecase" cx="740" cy="190" rx="135" ry="38"/>
+  <text class="text" x="653" y="195">Создать котика</text>
+
+  <ellipse class="usecase" cx="440" cy="285" rx="140" ry="38"/>
+  <text class="text" x="342" y="290">Создать путешествие</text>
+
+  <ellipse class="usecase" cx="750" cy="285" rx="165" ry="38"/>
+  <text class="text" x="636" y="282">Просмотреть свои и</text>
+  <text class="text" x="635" y="300">публичные путешествия</text>
+
+  <ellipse class="usecase" cx="970" cy="285" rx="105" ry="38"/>
+  <text class="text" x="904" y="282">Просмотреть</text>
+  <text class="text" x="903" y="300">мои поездки</text>
+
+  <ellipse class="usecase" cx="440" cy="385" rx="145" ry="38"/>
+  <text class="text" x="340" y="390">Изменить статус</text>
+
+  <ellipse class="usecase" cx="750" cy="385" rx="150" ry="38"/>
+  <text class="text" x="648" y="390">Добавить точку маршрута</text>
+
+  <ellipse class="usecase" cx="970" cy="385" rx="115" ry="38"/>
+  <text class="text" x="900" y="382">Изменить или</text>
+  <text class="text" x="904" y="400">удалить точку</text>
+
+  <ellipse class="usecase" cx="440" cy="485" rx="145" ry="38"/>
+  <text class="text" x="345" y="490">Добавить задачу</text>
+
+  <ellipse class="usecase" cx="750" cy="485" rx="150" ry="38"/>
+  <text class="text" x="645" y="482">Отметить задачу</text>
+  <text class="text" x="675" y="500">выполненной</text>
+
+  <ellipse class="usecase" cx="440" cy="585" rx="140" ry="38"/>
+  <text class="text" x="348" y="590">Удалить путешествие</text>
+
+  <ellipse class="check" cx="780" cy="585" rx="185" ry="38"/>
+  <text class="text" x="656" y="582">Проверить ошибки</text>
+  <text class="text" x="644" y="600">валидации и доступа</text>
+
+  <path class="line" d="M155 190 L305 190"/>
+  <path class="line" d="M155 205 L605 190"/>
+  <path class="line" d="M155 225 L305 285"/>
+  <path class="line" d="M155 245 L585 285"/>
+  <path class="line" d="M155 265 L300 385"/>
+  <path class="line" d="M155 285 L600 385"/>
+  <path class="line" d="M155 305 L295 485"/>
+  <path class="line" d="M155 325 L600 485"/>
+  <path class="line" d="M155 345 L300 585"/>
+
+  <path class="line" d="M150 505 C230 470, 285 260, 305 200"/>
+  <path class="line" d="M150 540 C330 545, 500 565, 595 585"/>
+  <path class="line" d="M150 575 C420 540, 580 315, 600 285"/>
+
+  <path class="line dash" d="M610 205 L545 260"/>
+  <text class="small" x="545" y="230">include</text>
+  <path class="line dash" d="M630 375 L560 315"/>
+  <text class="small" x="575" y="345">include</text>
+  <path class="line dash" d="M420 445 L430 323"/>
+  <text class="small" x="435" y="420">include</text>
+  <path class="line dash" d="M625 475 L585 485"/>
+  <text class="small" x="585" y="465">extend</text>
+</svg>

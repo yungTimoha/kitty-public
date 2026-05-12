@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="720" viewBox="0 0 1180 720" role="img" aria-labelledby="title desc">
+  <title id="title">Диаграмма развёртывания Kittygram</title>
+  <desc id="desc">Docker-вариант развёртывания: клиент обращается к контейнеру Django REST Framework, который использует переменные окружения, entrypoint и SQLite volume.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#2f4858"/>
+    </marker>
+    <style>
+      .page { fill: #ffffff; }
+      .box { fill: #f7fbff; stroke: #2f4858; stroke-width: 2; rx: 10; }
+      .host { fill: #fbfbf6; stroke: #8a6f2a; stroke-width: 2; rx: 14; }
+      .network { fill: #f3f7f0; stroke: #3b7d4a; stroke-width: 2; rx: 12; }
+      .volume { fill: #f9f0f4; stroke: #8f3f65; stroke-width: 2; rx: 10; }
+      .title { font: 700 28px Arial, sans-serif; fill: #1c2730; }
+      .label { font: 700 18px Arial, sans-serif; fill: #1c2730; }
+      .text { font: 15px Arial, sans-serif; fill: #24333d; }
+      .small { font: 13px Arial, sans-serif; fill: #44515b; }
+      .line { stroke: #2f4858; stroke-width: 2.2; fill: none; marker-end: url(#arrow); }
+      .dash { stroke-dasharray: 7 6; }
+    </style>
+  </defs>
+
+  <rect class="page" x="0" y="0" width="1180" height="720"/>
+  <text class="title" x="40" y="52">Диаграмма развёртывания: Docker-вариант</text>
+
+  <rect class="box" x="40" y="115" width="205" height="125"/>
+  <text class="label" x="70" y="152">Клиент</text>
+  <text class="text" x="70" y="182">Браузер</text>
+  <text class="text" x="70" y="204">Postman</text>
+  <text class="text" x="70" y="226">curl</text>
+
+  <rect class="host" x="315" y="90" width="805" height="560"/>
+  <text class="label" x="345" y="126">Локальная машина / сервер</text>
+
+  <rect class="box" x="355" y="165" width="210" height="150"/>
+  <text class="label" x="385" y="202">.env</text>
+  <text class="small" x="385" y="232">SECRET_KEY</text>
+  <text class="small" x="385" y="254">DEBUG</text>
+  <text class="small" x="385" y="276">ALLOWED_HOSTS</text>
+  <text class="small" x="385" y="298">SQLITE_PATH</text>
+
+  <rect class="network" x="610" y="155" width="455" height="335"/>
+  <text class="label" x="640" y="192">Docker Compose network</text>
+
+  <rect class="box" x="650" y="225" width="245" height="205"/>
+  <text class="label" x="680" y="262">kittygram_web</text>
+  <text class="small" x="680" y="292">Python 3.11</text>
+  <text class="small" x="680" y="314">Django + DRF</text>
+  <text class="small" x="680" y="336">Djoser + SimpleJWT</text>
+  <text class="small" x="680" y="358">Gunicorn</text>
+  <text class="small" x="680" y="380">0.0.0.0:8000</text>
+
+  <rect class="box" x="930" y="230" width="95" height="165"/>
+  <text class="label" x="950" y="266">SQLite</text>
+  <text class="small" x="948" y="296">db.sqlite3</text>
+  <text class="small" x="948" y="318">/app/data</text>
+
+  <rect class="box" x="650" y="455" width="375" height="85"/>
+  <text class="label" x="680" y="490">entrypoint.sh</text>
+  <text class="small" x="680" y="518">mkdir /app/data; python manage.py migrate --noinput</text>
+
+  <rect class="volume" x="715" y="575" width="245" height="55"/>
+  <text class="label" x="748" y="610">Docker volume: sqlite_data</text>
+
+  <path class="line" d="M245 178 C275 178, 280 330, 640 330"/>
+  <text class="small" x="260" y="162">HTTP :8000, JWT Bearer token</text>
+
+  <path class="line dash" d="M565 240 C590 240, 605 285, 650 295"/>
+  <text class="small" x="565" y="228">env_file</text>
+
+  <path class="line dash" d="M785 455 L785 432"/>
+  <text class="small" x="800" y="448">при старте</text>
+
+  <path class="line" d="M895 322 L930 322"/>
+  <text class="small" x="900" y="309">ORM</text>
+
+  <path class="line" d="M978 395 C978 495, 900 535, 860 575"/>
+  <text class="small" x="980" y="512">файл БД</text>
+</svg>

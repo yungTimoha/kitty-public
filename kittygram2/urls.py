@@ -8,6 +8,9 @@ from cats.views import (
     CatViewSet,
     FavoriteViewSet,
     LikeViewSet,
+    TravelChecklistItemViewSet,
+    TravelStopViewSet,
+    TravelViewSet,
     UserViewSet,
 )
 
@@ -18,6 +21,13 @@ router.register('users', UserViewSet)
 router.register('achievements', AchievementViewSet)
 router.register('likes', LikeViewSet, basename='likes')
 router.register('favorites', FavoriteViewSet, basename='favorites')
+router.register('travels', TravelViewSet, basename='travels')
+router.register('travel-stops', TravelStopViewSet, basename='travel-stops')
+router.register(
+    'travel-checklist',
+    TravelChecklistItemViewSet,
+    basename='travel-checklist',
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

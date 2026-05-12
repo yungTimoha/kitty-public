@@ -1,0 +1,524 @@
+{
+  "info": {
+    "_postman_id": "6db3b8f5-3e06-4dfb-8c8a-9d33b7d0b001",
+    "name": "Kittygram - Кото-путешествия",
+    "description": "Проверочные запросы для сценария \"Кото-путешествия\". Коллекция использует переменные base_url, access_token, cat_id, travel_id, stop_id и checklist_item_id.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000"
+    },
+    {
+      "key": "username",
+      "value": "tester"
+    },
+    {
+      "key": "password",
+      "value": "testpass123"
+    },
+    {
+      "key": "access_token",
+      "value": ""
+    },
+    {
+      "key": "cat_id",
+      "value": "1"
+    },
+    {
+      "key": "travel_id",
+      "value": "1"
+    },
+    {
+      "key": "stop_id",
+      "value": "1"
+    },
+    {
+      "key": "checklist_item_id",
+      "value": "1"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{access_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "01. Получить JWT-токен",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "const json = pm.response.json();",
+              "pm.collectionVariables.set('access_token', json.access);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"{{username}}\",\n  \"password\": \"{{password}}\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/auth/jwt/create/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "auth",
+            "jwt",
+            "create"
+          ]
+        },
+        "description": "Получает JWT access token для последующих защищенных запросов."
+      }
+    },
+    {
+      "name": "02. Создать котика для путешествия",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 201', function () {",
+              "  pm.response.to.have.status(201);",
+              "});",
+              "const json = pm.response.json();",
+              "pm.collectionVariables.set('cat_id', json.id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Marta\",\n  \"color\": \"Ginger\",\n  \"birth_year\": 2022\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/cats/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "cats"
+          ]
+        },
+        "description": "Создает котика, для которого будет планироваться путешествие."
+      }
+    },
+    {
+      "name": "03. Создать путешествие",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 201', function () {",
+              "  pm.response.to.have.status(201);",
+              "});",
+              "const json = pm.response.json();",
+              "pm.collectionVariables.set('travel_id', json.id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"cat\": {{cat_id}},\n  \"title\": \"Летняя поездка\",\n  \"destination\": \"Казань\",\n  \"start_date\": \"2026-06-01\",\n  \"end_date\": \"2026-06-05\",\n  \"transport\": \"поезд\",\n  \"status\": \"planned\",\n  \"is_public\": true,\n  \"notes\": \"Взять переноску и любимый плед.\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/travels/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "travels"
+          ]
+        },
+        "description": "Создает путешествие для котика текущего пользователя."
+      }
+    },
+    {
+      "name": "04. Получить список путешествий",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/travels/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "travels"
+          ]
+        },
+        "description": "Возвращает свои и публичные путешествия."
+      }
+    },
+    {
+      "name": "05. Получить мои путешествия",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/travels/my/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "travels",
+            "my"
+          ]
+        },
+        "description": "Возвращает только путешествия котиков текущего пользователя."
+      }
+    },
+    {
+      "name": "06. Добавить точку маршрута",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 201', function () {",
+              "  pm.response.to.have.status(201);",
+              "});",
+              "const json = pm.response.json();",
+              "pm.collectionVariables.set('stop_id', json.id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"travel\": {{travel_id}},\n  \"order\": 1,\n  \"city\": \"Казань\",\n  \"country\": \"Россия\",\n  \"address\": \"ул. Баумана, 1\",\n  \"arrival_date\": \"2026-06-01\",\n  \"departure_date\": \"2026-06-05\",\n  \"notes\": \"Отель разрешает проживание с животными.\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/travel-stops/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "travel-stops"
+          ]
+        },
+        "description": "Добавляет первую точку маршрута."
+      }
+    },
+    {
+      "name": "07. Ошибка повторного номера точки",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 400', function () {",
+              "  pm.response.to.have.status(400);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"travel\": {{travel_id}},\n  \"order\": 1,\n  \"city\": \"Иннополис\",\n  \"country\": \"Россия\",\n  \"arrival_date\": \"2026-06-02\",\n  \"departure_date\": \"2026-06-03\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/travel-stops/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "travel-stops"
+          ]
+        },
+        "description": "Проверяет валидацию уникальности поля order внутри одного путешествия."
+      }
+    },
+    {
+      "name": "08. Добавить задачу в чек-лист",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 201', function () {",
+              "  pm.response.to.have.status(201);",
+              "});",
+              "const json = pm.response.json();",
+              "pm.collectionVariables.set('checklist_item_id', json.id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"travel\": {{travel_id}},\n  \"title\": \"Получить ветеринарную справку\",\n  \"due_date\": \"2026-05-30\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/travel-checklist/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "travel-checklist"
+          ]
+        },
+        "description": "Создает задачу подготовки к путешествию."
+      }
+    },
+    {
+      "name": "09. Отметить задачу выполненной",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "pm.test('Task is done', function () {",
+              "  pm.expect(pm.response.json().is_done).to.eql(true);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"is_done\": true\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/travel-checklist/{{checklist_item_id}}/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "travel-checklist",
+            "{{checklist_item_id}}"
+          ]
+        },
+        "description": "Обновляет задачу чек-листа."
+      }
+    },
+    {
+      "name": "10. Ошибка дат путешествия",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 400', function () {",
+              "  pm.response.to.have.status(400);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"cat\": {{cat_id}},\n  \"title\": \"Некорректная поездка\",\n  \"destination\": \"Москва\",\n  \"start_date\": \"2026-07-10\",\n  \"end_date\": \"2026-07-01\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/travels/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "travels"
+          ]
+        },
+        "description": "Проверяет, что дата окончания не может быть раньше даты начала."
+      }
+    },
+    {
+      "name": "11. Ошибка 401 без авторизации",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 401 or 403 depending on auth class', function () {",
+              "  pm.expect([401, 403]).to.include(pm.response.code);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/travels/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "travels"
+          ]
+        },
+        "description": "Проверяет отказ для запроса без JWT-токена."
+      }
+    },
+    {
+      "name": "12. Ошибка 404 для несуществующего путешествия",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 404', function () {",
+              "  pm.response.to.have.status(404);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/travels/999999/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "travels",
+            "999999"
+          ]
+        },
+        "description": "Проверяет ответ 404 Not Found."
+      }
+    },
+    {
+      "name": "13. Ошибка 405 Method Not Allowed",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 405', function () {",
+              "  pm.response.to.have.status(405);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{}"
+        },
+        "url": {
+          "raw": "{{base_url}}/travels/my/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "travels",
+            "my"
+          ]
+        },
+        "description": "Проверяет, что POST недоступен для read-only action /travels/my/."
+      }
+    }
+  ]
+}

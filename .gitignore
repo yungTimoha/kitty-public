@@ -5,3 +5,23 @@ __pycache__/
 .DS_Store
 db.sqlite3
 .env
+
+# Word lock files
+~$*
+
+# Локальные рабочие файлы, не относящиеся к сдаваемой версии
+TEMP_RECOMMENDATIONS_TODO.md
+DOCX_MANUAL_STEPS.md
+build_coursework.py
+chapters/
+COURSE_TABLES.md
+SOURCES.md
+API_TEST_RESULTS.md
+DOCKER_DEPLOYMENT_CHECK.md
+KITTY_TRAVELS_DRAFT.md
+
+# Editor / IDE
+.idea/
+.vscode/
+*.swp
+*.swo
