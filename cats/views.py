@@ -52,7 +52,7 @@ class CatViewSet(viewsets.ModelViewSet):
 
         return queryset.order_by('id')
 
-    @action(detail=True, methods=('post',))
+    @action(detail=True, methods=('post',), permission_classes=(IsAuthenticated,))
     def like(self, request, pk=None):
         cat = self.get_object()
         serializer = LikeSerializer(
@@ -63,7 +63,7 @@ class CatViewSet(viewsets.ModelViewSet):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    @action(detail=True, methods=('delete',))
+    @action(detail=True, methods=('delete',), permission_classes=(IsAuthenticated,))
     def unlike(self, request, pk=None):
         cat = self.get_object()
         deleted, _ = Like.objects.filter(user=request.user, cat=cat).delete()
@@ -74,7 +74,7 @@ class CatViewSet(viewsets.ModelViewSet):
             )
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(detail=True, methods=('post',))
+    @action(detail=True, methods=('post',), permission_classes=(IsAuthenticated,))
     def favorite(self, request, pk=None):
         cat = self.get_object()
         serializer = FavoriteSerializer(
@@ -85,7 +85,7 @@ class CatViewSet(viewsets.ModelViewSet):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    @action(detail=True, methods=('delete',))
+    @action(detail=True, methods=('delete',), permission_classes=(IsAuthenticated,))
     def unfavorite(self, request, pk=None):
         cat = self.get_object()
         deleted, _ = Favorite.objects.filter(

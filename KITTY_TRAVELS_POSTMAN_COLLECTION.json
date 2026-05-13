@@ -1,44 +1,9 @@
 {
   "info": {
-    "_postman_id": "6db3b8f5-3e06-4dfb-8c8a-9d33b7d0b001",
-    "name": "Kittygram - Кото-путешествия",
-    "description": "Проверочные запросы для сценария \"Кото-путешествия\". Коллекция использует переменные base_url, access_token, cat_id, travel_id, stop_id и checklist_item_id.",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    "name": "Kittygram API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Полное API Kittygram: котики, лайки, избранное, кото-путешествия и проверка прав."
   },
-  "variable": [
-    {
-      "key": "base_url",
-      "value": "http://127.0.0.1:8001"
-    },
-    {
-      "key": "username",
-      "value": "tester"
-    },
-    {
-      "key": "password",
-      "value": "testpass123"
-    },
-    {
-      "key": "access_token",
-      "value": ""
-    },
-    {
-      "key": "cat_id",
-      "value": "1"
-    },
-    {
-      "key": "travel_id",
-      "value": "1"
-    },
-    {
-      "key": "stop_id",
-      "value": "1"
-    },
-    {
-      "key": "checklist_item_id",
-      "value": "1"
-    }
-  ],
   "auth": {
     "type": "bearer",
     "bearer": [
@@ -49,9 +14,91 @@
       }
     ]
   },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8001"
+    },
+    {
+      "key": "demo_username",
+      "value": "demo"
+    },
+    {
+      "key": "demo_password",
+      "value": "Demo1234!"
+    },
+    {
+      "key": "viewer_username",
+      "value": "viewer"
+    },
+    {
+      "key": "viewer_password",
+      "value": "Viewer1234!"
+    },
+    {
+      "key": "access_token",
+      "value": ""
+    },
+    {
+      "key": "viewer_token",
+      "value": ""
+    },
+    {
+      "key": "cat_id",
+      "value": "1"
+    },
+    {
+      "key": "other_cat_id",
+      "value": "3"
+    },
+    {
+      "key": "travel_id",
+      "value": "1"
+    },
+    {
+      "key": "other_travel_id",
+      "value": "2"
+    },
+    {
+      "key": "stop_id",
+      "value": "1"
+    },
+    {
+      "key": "checklist_item_id",
+      "value": "1"
+    }
+  ],
   "item": [
     {
-      "name": "01. Получить JWT-токен",
+      "name": "01. Auth: получить JWT для demo",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/auth/jwt/create/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "auth",
+            "jwt",
+            "create"
+          ]
+        },
+        "description": "Получает JWT access токен для demo. Токен сохраняется в access_token.",
+        "auth": {
+          "type": "noauth"
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"{{demo_username}}\",\n  \"password\": \"{{demo_password}}\"\n}"
+        }
+      },
       "event": [
         {
           "listen": "test",
@@ -66,11 +113,11 @@
             ]
           }
         }
-      ],
+      ]
+    },
+    {
+      "name": "02. Auth: получить JWT для viewer",
       "request": {
-        "auth": {
-          "type": "noauth"
-        },
         "method": "POST",
         "header": [
           {
@@ -78,10 +125,6 @@
             "value": "application/json"
           }
         ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"username\": \"{{username}}\",\n  \"password\": \"{{password}}\"\n}"
-        },
         "url": {
           "raw": "{{base_url}}/auth/jwt/create/",
           "host": [
@@ -93,38 +136,36 @@
             "create"
           ]
         },
-        "description": "Получает JWT access token для последующих защищенных запросов."
-      }
-    },
-    {
-      "name": "02. Создать котика для путешествия",
+        "description": "JWT для второго пользователя viewer. Используется для тестов 403.",
+        "auth": {
+          "type": "noauth"
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"{{viewer_username}}\",\n  \"password\": \"{{viewer_password}}\"\n}"
+        }
+      },
       "event": [
         {
           "listen": "test",
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test('Status code is 201', function () {",
-              "  pm.response.to.have.status(201);",
+              "pm.test('Status code is 200', function () {",
+              "  pm.response.to.have.status(200);",
               "});",
               "const json = pm.response.json();",
-              "pm.collectionVariables.set('cat_id', json.id);"
+              "pm.collectionVariables.set('viewer_token', json.access);"
             ]
           }
         }
-      ],
+      ]
+    },
+    {
+      "name": "03. Cats: список",
       "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"name\": \"Marta\",\n  \"color\": \"Ginger\",\n  \"birth_year\": 2022\n}"
-        },
+        "method": "GET",
+        "header": [],
         "url": {
           "raw": "{{base_url}}/cats/",
           "host": [
@@ -134,26 +175,117 @@
             "cats"
           ]
         },
-        "description": "Создает котика, для которого будет планироваться путешествие."
-      }
-    },
-    {
-      "name": "03. Создать путешествие",
+        "description": "Список всех котиков с фильтрами color, owner, search."
+      },
       "event": [
         {
           "listen": "test",
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test('Status code is 201', function () {",
-              "  pm.response.to.have.status(201);",
-              "});",
-              "const json = pm.response.json();",
-              "pm.collectionVariables.set('travel_id', json.id);"
+              "pm.test('Status code is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});"
             ]
           }
         }
-      ],
+      ]
+    },
+    {
+      "name": "04. Cats: фильтр по цвету (Ginger)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/cats/?color=Ginger",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "cats",
+            "?color=Ginger"
+          ]
+        },
+        "description": "Фильтр queryset по полю color."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "05. Cats: поиск по имени",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/cats/?search=Mar",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "cats",
+            "?search=Mar"
+          ]
+        },
+        "description": "Поиск через name__icontains."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "06. Cats: получить котика",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/cats/{{cat_id}}/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "cats",
+            "{{cat_id}}"
+          ]
+        },
+        "description": "Детальная информация о котике."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "07. Cats: создать котика",
       "request": {
         "method": "POST",
         "header": [
@@ -162,24 +294,389 @@
             "value": "application/json"
           }
         ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"cat\": {{cat_id}},\n  \"title\": \"Летняя поездка\",\n  \"destination\": \"Казань\",\n  \"start_date\": \"2026-06-01\",\n  \"end_date\": \"2026-06-05\",\n  \"transport\": \"поезд\",\n  \"status\": \"planned\",\n  \"is_public\": true,\n  \"notes\": \"Взять переноску и любимый плед.\"\n}"
-        },
         "url": {
-          "raw": "{{base_url}}/travels/",
+          "raw": "{{base_url}}/cats/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
-            "travels"
+            "cats"
           ]
         },
-        "description": "Создает путешествие для котика текущего пользователя."
-      }
+        "description": "Создание нового котика. Владелец — текущий пользователь.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Whiskers\",\n  \"color\": \"White\",\n  \"birth_year\": 2023\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 201', function () {",
+              "  pm.response.to.have.status(201);",
+              "});"
+            ]
+          }
+        }
+      ]
     },
     {
-      "name": "04. Получить список путешествий",
+      "name": "08. Cats: ошибка 400 (неверный color)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/cats/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "cats"
+          ]
+        },
+        "description": "Валидация ChoiceField: color должен быть одним из значений CHOICES.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Bad\",\n  \"color\": \"Purple\",\n  \"birth_year\": 2023\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 400', function () {",
+              "  pm.response.to.have.status(400);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "09. Cats: лайкнуть котика",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/cats/{{cat_id}}/like/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "cats",
+            "{{cat_id}}",
+            "like"
+          ]
+        },
+        "description": "Кастомное действие @action(detail=True). Создаёт Like."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 201', function () {",
+              "  pm.response.to.have.status(201);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "10. Cats: ошибка повторного лайка",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/cats/{{cat_id}}/like/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "cats",
+            "{{cat_id}}",
+            "like"
+          ]
+        },
+        "description": "UniqueConstraint(user, cat). Повторный лайк отдаёт 400."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 400', function () {",
+              "  pm.response.to.have.status(400);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "11. Cats: убрать лайк",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/cats/{{cat_id}}/unlike/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "cats",
+            "{{cat_id}}",
+            "unlike"
+          ]
+        },
+        "description": "Кастомное действие unlike."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 204', function () {",
+              "  pm.response.to.have.status(204);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "12. Cats: добавить в избранное",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/cats/{{cat_id}}/favorite/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "cats",
+            "{{cat_id}}",
+            "favorite"
+          ]
+        },
+        "description": "Создаёт Favorite."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 201', function () {",
+              "  pm.response.to.have.status(201);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "13. Cats: убрать из избранного",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/cats/{{cat_id}}/unfavorite/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "cats",
+            "{{cat_id}}",
+            "unfavorite"
+          ]
+        },
+        "description": "Кастомное действие unfavorite."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 204', function () {",
+              "  pm.response.to.have.status(204);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "14. Cats: топ по лайкам",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/cats/top/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "cats",
+            "top"
+          ]
+        },
+        "description": "Сортировка по annotate(likes_count=Count('likes'))."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "15. Cats: мои лайки",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/cats/my_likes/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "cats",
+            "my_likes"
+          ]
+        },
+        "description": "Котики, лайкнутые текущим пользователем."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "16. Cats: мои избранные",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/cats/my_favorites/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "cats",
+            "my_favorites"
+          ]
+        },
+        "description": "Котики из избранного текущего пользователя."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "17. Likes: список моих лайков",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/likes/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "likes"
+          ]
+        },
+        "description": "ReadOnly viewset с фильтрацией по user=request.user."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "18. Favorites: список моего избранного",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/favorites/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "favorites"
+          ]
+        },
+        "description": "ReadOnly viewset с фильтрацией по user=request.user."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "19. Travels: список (свои и публичные)",
       "request": {
         "method": "GET",
         "header": [],
@@ -192,11 +689,24 @@
             "travels"
           ]
         },
-        "description": "Возвращает свои и публичные путешествия."
-      }
+        "description": "Свои путешествия + публичные путешествия других пользователей."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ]
     },
     {
-      "name": "05. Получить мои путешествия",
+      "name": "20. Travels: только мои",
       "request": {
         "method": "GET",
         "header": [],
@@ -210,26 +720,117 @@
             "my"
           ]
         },
-        "description": "Возвращает только путешествия котиков текущего пользователя."
-      }
-    },
-    {
-      "name": "06. Добавить точку маршрута",
+        "description": "Кастомное действие /travels/my/."
+      },
       "event": [
         {
           "listen": "test",
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test('Status code is 201', function () {",
-              "  pm.response.to.have.status(201);",
-              "});",
-              "const json = pm.response.json();",
-              "pm.collectionVariables.set('stop_id', json.id);"
+              "pm.test('Status code is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});"
             ]
           }
         }
-      ],
+      ]
+    },
+    {
+      "name": "21. Travels: фильтр публичных",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/travels/?is_public=true",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "travels",
+            "?is_public=true"
+          ]
+        },
+        "description": "Фильтр по флагу is_public."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "22. Travels: фильтр по направлению",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/travels/?destination=Казань",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "travels",
+            "?destination=Казань"
+          ]
+        },
+        "description": "Поиск через destination__icontains."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "23. Travels: получить путешествие",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/travels/{{travel_id}}/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "travels",
+            "{{travel_id}}"
+          ]
+        },
+        "description": "Детальная информация с вложенным списком stops."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "24. Travels: создать путешествие",
       "request": {
         "method": "POST",
         "header": [
@@ -238,24 +839,60 @@
             "value": "application/json"
           }
         ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"travel\": {{travel_id}},\n  \"order\": 1,\n  \"city\": \"Казань\",\n  \"country\": \"Россия\",\n  \"address\": \"ул. Баумана, 1\",\n  \"arrival_date\": \"2026-06-01\",\n  \"departure_date\": \"2026-06-05\",\n  \"notes\": \"Отель разрешает проживание с животными.\"\n}"
-        },
         "url": {
-          "raw": "{{base_url}}/travel-stops/",
+          "raw": "{{base_url}}/travels/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
-            "travel-stops"
+            "travels"
           ]
         },
-        "description": "Добавляет первую точку маршрута."
-      }
+        "description": "Создание путешествия для своего котика.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"cat\": {{cat_id}},\n  \"title\": \"Зимняя поездка\",\n  \"destination\": \"Сочи\",\n  \"start_date\": \"2026-12-15\",\n  \"end_date\": \"2026-12-25\",\n  \"transport\": \"самолёт\",\n  \"status\": \"planned\",\n  \"is_public\": false,\n  \"notes\": \"Новогодние каникулы.\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 201', function () {",
+              "  pm.response.to.have.status(201);",
+              "});"
+            ]
+          }
+        }
+      ]
     },
     {
-      "name": "07. Ошибка повторного номера точки",
+      "name": "25. Travels: ошибка дат (end < start)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/travels/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "travels"
+          ]
+        },
+        "description": "Валидация TravelSerializer.validate(): end_date >= start_date.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"cat\": {{cat_id}},\n  \"title\": \"Plохая поездка\",\n  \"destination\": \"X\",\n  \"start_date\": \"2026-10-05\",\n  \"end_date\": \"2026-10-01\"\n}"
+        }
+      },
       "event": [
         {
           "listen": "test",
@@ -268,7 +905,10 @@
             ]
           }
         }
-      ],
+      ]
+    },
+    {
+      "name": "26. Travels: ошибка чужого котика",
       "request": {
         "method": "POST",
         "header": [
@@ -277,10 +917,80 @@
             "value": "application/json"
           }
         ],
+        "url": {
+          "raw": "{{base_url}}/travels/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "travels"
+          ]
+        },
+        "description": "validate_cat(): нельзя создать путешествие для чужого котика.",
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"travel\": {{travel_id}},\n  \"order\": 1,\n  \"city\": \"Иннополис\",\n  \"country\": \"Россия\",\n  \"arrival_date\": \"2026-06-02\",\n  \"departure_date\": \"2026-06-03\"\n}"
+          "raw": "{\n  \"cat\": {{other_cat_id}},\n  \"title\": \"Не моё\",\n  \"destination\": \"X\",\n  \"start_date\": \"2026-09-01\",\n  \"end_date\": \"2026-09-05\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 400', function () {",
+              "  pm.response.to.have.status(400);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "27. Travels: изменить путешествие",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/travels/{{travel_id}}/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "travels",
+            "{{travel_id}}"
+          ]
         },
+        "description": "PATCH меняет только указанные поля.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"in_progress\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "28. Stops: список",
+      "request": {
+        "method": "GET",
+        "header": [],
         "url": {
           "raw": "{{base_url}}/travel-stops/",
           "host": [
@@ -290,26 +1000,55 @@
             "travel-stops"
           ]
         },
-        "description": "Проверяет валидацию уникальности поля order внутри одного путешествия."
-      }
-    },
-    {
-      "name": "08. Добавить задачу в чек-лист",
+        "description": "Точки своих и публичных путешествий."
+      },
       "event": [
         {
           "listen": "test",
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test('Status code is 201', function () {",
-              "  pm.response.to.have.status(201);",
-              "});",
-              "const json = pm.response.json();",
-              "pm.collectionVariables.set('checklist_item_id', json.id);"
+              "pm.test('Status code is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});"
             ]
           }
         }
-      ],
+      ]
+    },
+    {
+      "name": "29. Stops: фильтр по путешествию",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/travel-stops/?travel={{travel_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "travel-stops",
+            "?travel={{travel_id}}"
+          ]
+        },
+        "description": "Точки конкретного путешествия."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "30. Stops: добавить точку",
       "request": {
         "method": "POST",
         "header": [
@@ -318,10 +1057,118 @@
             "value": "application/json"
           }
         ],
+        "url": {
+          "raw": "{{base_url}}/travel-stops/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "travel-stops"
+          ]
+        },
+        "description": "Добавление точки маршрута к своему путешествию.",
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"travel\": {{travel_id}},\n  \"title\": \"Получить ветеринарную справку\",\n  \"due_date\": \"2026-05-30\"\n}"
+          "raw": "{\n  \"travel\": {{travel_id}},\n  \"order\": 2,\n  \"city\": \"Нижний Новгород\",\n  \"country\": \"Россия\",\n  \"address\": \"Кремль\",\n  \"arrival_date\": \"2026-06-02\",\n  \"departure_date\": \"2026-06-03\",\n  \"notes\": \"Пересадка.\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 201', function () {",
+              "  pm.response.to.have.status(201);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "31. Stops: ошибка дубликата order",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/travel-stops/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "travel-stops"
+          ]
         },
+        "description": "UniqueConstraint(travel, order) + проверка в validate().",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"travel\": {{travel_id}},\n  \"order\": 1,\n  \"city\": \"X\",\n  \"country\": \"Y\",\n  \"arrival_date\": \"2026-06-01\",\n  \"departure_date\": \"2026-06-02\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 400', function () {",
+              "  pm.response.to.have.status(400);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "32. Stops: ошибка дат вне путешествия",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/travel-stops/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "travel-stops"
+          ]
+        },
+        "description": "arrival_date должен быть >= travel.start_date.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"travel\": {{travel_id}},\n  \"order\": 99,\n  \"city\": \"X\",\n  \"country\": \"Y\",\n  \"arrival_date\": \"2025-05-01\",\n  \"departure_date\": \"2025-05-02\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 400', function () {",
+              "  pm.response.to.have.status(400);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "33. Checklist: список задач",
+      "request": {
+        "method": "GET",
+        "header": [],
         "url": {
           "raw": "{{base_url}}/travel-checklist/",
           "host": [
@@ -331,11 +1178,8 @@
             "travel-checklist"
           ]
         },
-        "description": "Создает задачу подготовки к путешествию."
-      }
-    },
-    {
-      "name": "09. Отметить задачу выполненной",
+        "description": "Только задачи своих путешествий."
+      },
       "event": [
         {
           "listen": "test",
@@ -344,14 +1188,123 @@
             "exec": [
               "pm.test('Status code is 200', function () {",
               "  pm.response.to.have.status(200);",
-              "});",
-              "pm.test('Task is done', function () {",
-              "  pm.expect(pm.response.json().is_done).to.eql(true);",
               "});"
             ]
           }
         }
-      ],
+      ]
+    },
+    {
+      "name": "34. Checklist: фильтр is_done=false",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/travel-checklist/?is_done=false",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "travel-checklist",
+            "?is_done=false"
+          ]
+        },
+        "description": "Невыполненные задачи."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "35. Checklist: добавить задачу",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/travel-checklist/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "travel-checklist"
+          ]
+        },
+        "description": "Создание задачи подготовки.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"travel\": {{travel_id}},\n  \"title\": \"Купить корм\",\n  \"is_done\": false,\n  \"due_date\": \"2026-05-28\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 201', function () {",
+              "  pm.response.to.have.status(201);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "36. Checklist: ошибка дублирующего title",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/travel-checklist/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "travel-checklist"
+          ]
+        },
+        "description": "UniqueConstraint(travel, title) + проверка в validate().",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"travel\": {{travel_id}},\n  \"title\": \"Купить корм\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 400', function () {",
+              "  pm.response.to.have.status(400);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "37. Checklist: отметить выполненной",
       "request": {
         "method": "PATCH",
         "header": [
@@ -360,10 +1313,6 @@
             "value": "application/json"
           }
         ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"is_done\": true\n}"
-        },
         "url": {
           "raw": "{{base_url}}/travel-checklist/{{checklist_item_id}}/",
           "host": [
@@ -374,11 +1323,111 @@
             "{{checklist_item_id}}"
           ]
         },
-        "description": "Обновляет задачу чек-листа."
-      }
+        "description": "PATCH меняет только is_done.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"is_done\": true\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ]
     },
     {
-      "name": "10. Ошибка дат путешествия",
+      "name": "38. 403: viewer пытается изменить путешествие demo",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/travels/{{travel_id}}/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "travels",
+            "{{travel_id}}"
+          ]
+        },
+        "description": "IsTravelOwnerOrPublicReadOnly запрещает PATCH публичного путешествия чужому пользователю.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Hacked\"\n}"
+        },
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{viewer_token}}",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 403', function () {",
+              "  pm.response.to.have.status(403);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "39. 403: viewer пытается добавить точку в путешествие demo",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/travel-stops/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "travel-stops"
+          ]
+        },
+        "description": "validate_travel() запрещает добавлять точки в чужое путешествие (отдаёт 400).",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"travel\": {{travel_id}},\n  \"order\": 99,\n  \"city\": \"X\",\n  \"country\": \"Y\",\n  \"arrival_date\": \"2026-06-02\",\n  \"departure_date\": \"2026-06-03\"\n}"
+        },
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{viewer_token}}",
+              "type": "string"
+            }
+          ]
+        }
+      },
       "event": [
         {
           "listen": "test",
@@ -391,79 +1440,10 @@
             ]
           }
         }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"cat\": {{cat_id}},\n  \"title\": \"Некорректная поездка\",\n  \"destination\": \"Москва\",\n  \"start_date\": \"2026-07-10\",\n  \"end_date\": \"2026-07-01\"\n}"
-        },
-        "url": {
-          "raw": "{{base_url}}/travels/",
-          "host": [
-            "{{base_url}}"
-          ],
-          "path": [
-            "travels"
-          ]
-        },
-        "description": "Проверяет, что дата окончания не может быть раньше даты начала."
-      }
+      ]
     },
     {
-      "name": "11. Ошибка 401 без авторизации",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('Status code is 401 or 403 depending on auth class', function () {",
-              "  pm.expect([401, 403]).to.include(pm.response.code);",
-              "});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "auth": {
-          "type": "noauth"
-        },
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "{{base_url}}/travels/",
-          "host": [
-            "{{base_url}}"
-          ],
-          "path": [
-            "travels"
-          ]
-        },
-        "description": "Проверяет отказ для запроса без JWT-токена."
-      }
-    },
-    {
-      "name": "12. Ошибка 404 для несуществующего путешествия",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('Status code is 404', function () {",
-              "  pm.response.to.have.status(404);",
-              "});"
-            ]
-          }
-        }
-      ],
+      "name": "40. 404: несуществующее путешествие",
       "request": {
         "method": "GET",
         "header": [],
@@ -477,11 +1457,39 @@
             "999999"
           ]
         },
-        "description": "Проверяет ответ 404 Not Found."
-      }
+        "description": "DRF get_object() возвращает 404 для несуществующего id."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 404', function () {",
+              "  pm.response.to.have.status(404);",
+              "});"
+            ]
+          }
+        }
+      ]
     },
     {
-      "name": "13. Ошибка 405 Method Not Allowed",
+      "name": "41. 405: неподдерживаемый метод",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/travels/my/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "travels",
+            "my"
+          ]
+        },
+        "description": "action my объявлен только для GET. POST возвращает 405."
+      },
       "event": [
         {
           "listen": "test",
@@ -494,31 +1502,40 @@
             ]
           }
         }
-      ],
+      ]
+    },
+    {
+      "name": "42. 401/403: запрос без авторизации",
       "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{}"
-        },
+        "method": "GET",
+        "header": [],
         "url": {
-          "raw": "{{base_url}}/travels/my/",
+          "raw": "{{base_url}}/travels/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
-            "travels",
-            "my"
+            "travels"
           ]
         },
-        "description": "Проверяет, что POST недоступен для read-only action /travels/my/."
-      }
+        "description": "DEFAULT_PERMISSION_CLASSES=IsAuthenticated. Без токена возвращает 403.",
+        "auth": {
+          "type": "noauth"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 403', function () {",
+              "  pm.response.to.have.status(403);",
+              "});"
+            ]
+          }
+        }
+      ]
     }
   ]
 }
