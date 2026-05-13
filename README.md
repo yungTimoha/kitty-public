@@ -72,7 +72,7 @@ docker compose exec web python manage.py createsuperuser
 Вариант 2 — обычный пользователь через Djoser:
 
 ```bash
-curl -X POST http://127.0.0.1:8000/auth/users/ \
+curl -X POST http://127.0.0.1:8001/auth/users/ \
   -H "Content-Type: application/json" \
   -d '{"username": "test_user", "password": "Test1234!"}'
 ```
@@ -80,7 +80,7 @@ curl -X POST http://127.0.0.1:8000/auth/users/ \
 Получение JWT-токена для тестового пользователя:
 
 ```bash
-curl -X POST http://127.0.0.1:8000/auth/jwt/create/ \
+curl -X POST http://127.0.0.1:8001/auth/jwt/create/ \
   -H "Content-Type: application/json" \
   -d '{"username": "test_user", "password": "Test1234!"}'
 ```
@@ -356,11 +356,11 @@ docker compose logs web
 5. Проверить доступность API:
 
 ```text
-http://127.0.0.1:8000/
+http://127.0.0.1:8001/
 ```
 
 ```bash
-curl -i http://127.0.0.1:8000/
+curl -i http://127.0.0.1:8001/
 ```
 
 Контейнер при старте автоматически применяет миграции через `entrypoint.sh`.

@@ -13,7 +13,7 @@ TOKEN=<access_token>
 ## 1. Получить JWT-токен
 
 ```bash
-curl -X POST http://127.0.0.1:8000/auth/jwt/create/ \
+curl -X POST http://127.0.0.1:8001/auth/jwt/create/ \
   -H "Content-Type: application/json" \
   -d '{"username":"tester","password":"testpass123"}'
 ```
@@ -23,7 +23,7 @@ curl -X POST http://127.0.0.1:8000/auth/jwt/create/ \
 ## 2. Получить список котиков
 
 ```bash
-curl http://127.0.0.1:8000/cats/ \
+curl http://127.0.0.1:8001/cats/ \
   -H "Authorization: Bearer $TOKEN"
 ```
 
@@ -32,7 +32,7 @@ curl http://127.0.0.1:8000/cats/ \
 ## 3. Создать котика
 
 ```bash
-curl -X POST http://127.0.0.1:8000/cats/ \
+curl -X POST http://127.0.0.1:8001/cats/ \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -47,7 +47,7 @@ curl -X POST http://127.0.0.1:8000/cats/ \
 ## 4. Поставить лайк котику
 
 ```bash
-curl -X POST http://127.0.0.1:8000/cats/1/like/ \
+curl -X POST http://127.0.0.1:8001/cats/1/like/ \
   -H "Authorization: Bearer $TOKEN"
 ```
 
@@ -56,7 +56,7 @@ curl -X POST http://127.0.0.1:8000/cats/1/like/ \
 ## 5. Проверить ошибку повторного лайка
 
 ```bash
-curl -X POST http://127.0.0.1:8000/cats/1/like/ \
+curl -X POST http://127.0.0.1:8001/cats/1/like/ \
   -H "Authorization: Bearer $TOKEN"
 ```
 
@@ -73,7 +73,7 @@ curl -X POST http://127.0.0.1:8000/cats/1/like/ \
 ## 6. Добавить котика в избранное
 
 ```bash
-curl -X POST http://127.0.0.1:8000/cats/1/favorite/ \
+curl -X POST http://127.0.0.1:8001/cats/1/favorite/ \
   -H "Authorization: Bearer $TOKEN"
 ```
 
@@ -82,7 +82,7 @@ curl -X POST http://127.0.0.1:8000/cats/1/favorite/ \
 ## 7. Получить мои лайки
 
 ```bash
-curl http://127.0.0.1:8000/cats/my_likes/ \
+curl http://127.0.0.1:8001/cats/my_likes/ \
   -H "Authorization: Bearer $TOKEN"
 ```
 
@@ -91,7 +91,7 @@ curl http://127.0.0.1:8000/cats/my_likes/ \
 ## 8. Получить топ котиков по лайкам
 
 ```bash
-curl http://127.0.0.1:8000/cats/top/ \
+curl http://127.0.0.1:8001/cats/top/ \
   -H "Authorization: Bearer $TOKEN"
 ```
 
@@ -100,7 +100,7 @@ curl http://127.0.0.1:8000/cats/top/ \
 ## 9. Убрать лайк
 
 ```bash
-curl -X DELETE http://127.0.0.1:8000/cats/1/unlike/ \
+curl -X DELETE http://127.0.0.1:8001/cats/1/unlike/ \
   -H "Authorization: Bearer $TOKEN"
 ```
 
@@ -109,7 +109,7 @@ curl -X DELETE http://127.0.0.1:8000/cats/1/unlike/ \
 ## 10. Получить мое избранное
 
 ```bash
-curl http://127.0.0.1:8000/cats/my_favorites/ \
+curl http://127.0.0.1:8001/cats/my_favorites/ \
   -H "Authorization: Bearer $TOKEN"
 ```
 
@@ -135,7 +135,7 @@ TOKEN=<access_token>
 ## 11. Создать котика для путешествия
 
 ```bash
-curl -X POST http://127.0.0.1:8000/cats/ \
+curl -X POST http://127.0.0.1:8001/cats/ \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -150,7 +150,7 @@ curl -X POST http://127.0.0.1:8000/cats/ \
 ## 12. Создать путешествие
 
 ```bash
-curl -X POST http://127.0.0.1:8000/travels/ \
+curl -X POST http://127.0.0.1:8001/travels/ \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -171,7 +171,7 @@ curl -X POST http://127.0.0.1:8000/travels/ \
 ## 13. Получить список путешествий
 
 ```bash
-curl http://127.0.0.1:8000/travels/ \
+curl http://127.0.0.1:8001/travels/ \
   -H "Authorization: Bearer $TOKEN"
 ```
 
@@ -180,7 +180,7 @@ curl http://127.0.0.1:8000/travels/ \
 ## 14. Получить только мои путешествия
 
 ```bash
-curl http://127.0.0.1:8000/travels/my/ \
+curl http://127.0.0.1:8001/travels/my/ \
   -H "Authorization: Bearer $TOKEN"
 ```
 
@@ -189,7 +189,7 @@ curl http://127.0.0.1:8000/travels/my/ \
 ## 15. Добавить точку маршрута
 
 ```bash
-curl -X POST http://127.0.0.1:8000/travel-stops/ \
+curl -X POST http://127.0.0.1:8001/travel-stops/ \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -209,7 +209,7 @@ curl -X POST http://127.0.0.1:8000/travel-stops/ \
 ## 16. Проверить ошибку повторного номера точки
 
 ```bash
-curl -X POST http://127.0.0.1:8000/travel-stops/ \
+curl -X POST http://127.0.0.1:8001/travel-stops/ \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -227,7 +227,7 @@ curl -X POST http://127.0.0.1:8000/travel-stops/ \
 ## 17. Добавить задачу в чек-лист
 
 ```bash
-curl -X POST http://127.0.0.1:8000/travel-checklist/ \
+curl -X POST http://127.0.0.1:8001/travel-checklist/ \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -242,7 +242,7 @@ curl -X POST http://127.0.0.1:8000/travel-checklist/ \
 ## 18. Отметить задачу выполненной
 
 ```bash
-curl -X PATCH http://127.0.0.1:8000/travel-checklist/1/ \
+curl -X PATCH http://127.0.0.1:8001/travel-checklist/1/ \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -255,7 +255,7 @@ curl -X PATCH http://127.0.0.1:8000/travel-checklist/1/ \
 ## 19. Проверить ошибку дат путешествия
 
 ```bash
-curl -X POST http://127.0.0.1:8000/travels/ \
+curl -X POST http://127.0.0.1:8001/travels/ \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -272,7 +272,7 @@ curl -X POST http://127.0.0.1:8000/travels/ \
 ## 20. Отфильтровать путешествия по статусу
 
 ```bash
-curl "http://127.0.0.1:8000/travels/?status=planned" \
+curl "http://127.0.0.1:8001/travels/?status=planned" \
   -H "Authorization: Bearer $TOKEN"
 ```
 
